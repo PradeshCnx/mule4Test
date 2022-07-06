@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/
 	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="9701609e-904c-4c7f-bace-7be6cc73e80e" >
 		<sqs:basic-connection testQueueArn="arn:aws:sqs:us-east-1:486384427292:Mule4TestQueue" accessKey="AKIAXCPWFMEOB32PJAS3" secretKey="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" />
 	</sqs:config>
-	<global-property doc:name="Global Property" doc:id="d61f579d-8541-46be-93c1-c0951488e96a" name="env" value="dev" />
+	<global-property doc:name="Global Property" doc:id="d61f579d-8541-46be-93c1-c0951488e96a" name="enviroment" value="dev" />
 	<flow name="aws_s3_buckectFlow" doc:id="3d951f70-590b-4c05-9609-547c9f7d44b9" >
 		<http:listener doc:name="Listener" doc:id="9b91a34f-b2cb-4e27-85ae-8e5e484c1a58" config-ref="HTTP_Listener_config" path="/s3Test"/>
 		<file:read doc:name="Read" doc:id="339428b0-e23b-45fd-b16b-384bff57563a" path="C:\Users\mpradesh\poc\sample csv file\business-employment-data.csv"/>
