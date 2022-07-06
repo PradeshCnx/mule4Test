@@ -40,8 +40,8 @@
 						<businessGroup>${business}</businessGroup>
 						<workerType>${vCore}</workerType>
 						<objectStoreV2>true</objectStoreV2>
-						<classifier>mule-application</classifier>
 					</cloudHubDeployment>
+					<classifier>mule-application</classifier>
 				</configuration>
 			</plugin>
 		</plugins>
