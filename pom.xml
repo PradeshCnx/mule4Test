@@ -35,7 +35,7 @@
 						<muleVersion>${mule.version}</muleVersion>
 						<username>${anypoint.username}</username>
 						<password>${anypoint.password}</password>
-						<env>${env}</env>
+						<env>dev</env>
 						<applicationName>${appname}</applicationName>
 						<businessGroup>${business}</businessGroup>
 						<workerType>${vCore}</workerType>
