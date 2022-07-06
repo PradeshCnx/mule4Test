@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sqs="http://www.mulesoft.org/schema/mule/sqs" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/current/mule-sqs.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="454bef84-0b4b-4ad7-8afb-558a4179edcb" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="e6b08e24-6de4-4b73-aa68-1f18ae483851" >
+		<s3:basic-connection accessKey="AKIAXCPWFMEOB32PJAS3" secretKey="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" />
+	</s3:config>
+	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="9701609e-904c-4c7f-bace-7be6cc73e80e" >
+		<sqs:basic-connection testQueueArn="arn:aws:sqs:us-east-1:486384427292:Mule4TestQueue" accessKey="AKIAXCPWFMEOB32PJAS3" secretKey="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" />
+	</sqs:config>
+	<flow name="aws_s3_buckectFlow" doc:id="3d951f70-590b-4c05-9609-547c9f7d44b9" >
+		<http:listener doc:name="Listener" doc:id="9b91a34f-b2cb-4e27-85ae-8e5e484c1a58" config-ref="HTTP_Listener_config" path="/s3Test"/>
+		<file:read doc:name="Read" doc:id="339428b0-e23b-45fd-b16b-384bff57563a" path="C:\Users\mpradesh\poc\sample csv file\business-employment-data.csv"/>
+		<logger level="INFO" doc:name="Processing Started" doc:id="135b955f-29ab-4113-8cee-93d2ec26c6d4" message="****** Processing Started with input payload  ***** #[payload]"/>
+		<s3:create-bucket doc:name="Create bucket" doc:id="c72ebc00-d214-48be-b303-be3eaed3eeba" config-ref="Amazon_S3_Configuration" bucketName="mule4s3test" target="s3Create"/>
+		<logger level="INFO" doc:name="S3 Buckect Created" doc:id="372700f7-0a95-465e-a548-5b9c9b0ee804" message="***** S3 Buckect Created ***** #[payload]"/>
+		<s3:create-object doc:name="Create object" doc:id="23e514d4-015a-4e83-bdd1-99089d36f26f" config-ref="Amazon_S3_Configuration" bucketName="mule4s3test" key="business-employment-data.csv" lastModified='#[now() as LocalDateTime {format:"yyyy/MM/dd"}]'>
+		</s3:create-object>
+		<ee:transform doc:name="Transform Message" doc:id="bf5acc70-ebed-4fc0-8707-0a4132e740d2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Processing Completed" doc:id="01eb9682-255d-4869-920f-d56d148aafaf" message="***** Processing Completed ******"/>
+	</flow>
+	<flow name="sqs_message" doc:id="5e5e43fe-25cf-4383-b61c-dbad2ce54379" >
+		<http:listener doc:name="Listener" doc:id="6fc28ef3-43c3-4992-8e03-491d9639bd65" config-ref="HTTP_Listener_config" path="/sqsTest"/>
+		<logger level="INFO" doc:name="Processing Started For SQS Message Flow" doc:id="724ee9a0-cfef-4636-868a-3bfa7f041647" message="**** Processing Started For SQS Message Flow *****"/>
+		<sqs:read doc:name="Read" doc:id="a161235c-3556-4633-b1e1-6009ea5ce5b8" config-ref="Amazon_SQS_Configuration" maxNumberOfMessages="2" queueUrl="https://sqs.us-east-1.amazonaws.com/486384427292/Mule4TestQueue"/>
+		<logger level="INFO" doc:name="Read Payload from SQS Queue" doc:id="2bb1f0c4-48e1-48b7-9757-350f86746b73" message="**** Read Payload from SQS Queue **** "/>
+		<set-payload value="#[payload[0].body]" doc:name="Set Payload" doc:id="e11b7569-90cf-4567-8372-31dbc24b7a4a" mimeType="application/json"/>
+		<ee:transform doc:name="Transform Message" doc:id="30054c97-b0b5-4d25-b8fd-383b5ee38074" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv 
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<s3:create-object doc:name="Create object" doc:id="edc7abc6-5c6b-4564-8474-d18fcb6a0431" config-ref="Amazon_S3_Configuration" bucketName="mule4s3test" key="sqstest.csv" lastModified='2022-07-05T15:59:05'>
+		</s3:create-object>
+		<ee:transform doc:name="Transform Message" doc:id="e6c7eaeb-8be6-4368-bc46-02b933ba4d76" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Processing Completed SQS Message Flow" doc:id="738dc208-e7d9-465e-be3e-8953fcc85d93" message="***** Processing Completed SQS Message Flow *****"/>
+	</flow>
+</mule>
