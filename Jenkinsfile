@@ -1,5 +1,8 @@
 pipeline{
 	agent any
+	environment{
+			anypoint_userName = credentials('Anypoint-UserName')
+	}
 	
 	stages{
 		stage('Build'){
@@ -17,7 +20,7 @@ pipeline{
 		stage('Deploy'){
 			steps{
 				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
-				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=${username} -Danypoint.password=${password} -Denv=${environment} -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
+				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=Mulesoft-123 -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
 			}
 		}
 	}
