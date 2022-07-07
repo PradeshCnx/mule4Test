@@ -12,12 +12,13 @@ http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="e6b08e24-6de4-4b73-aa68-1f18ae483851" >
-		<s3:basic-connection accessKey="*******" secretKey="*********" />
+		<s3:basic-connection accessKey="AKIAXCPWFMEOB32PJAS3" secretKey="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" />
 	</s3:config>
 	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="9701609e-904c-4c7f-bace-7be6cc73e80e" >
-		<sqs:basic-connection testQueueArn="arn:aws:sqs:us-east-1:486384427292:Mule4TestQueue" accessKey="*******" secretKey="********" />
+		<sqs:basic-connection testQueueArn="arn:aws:sqs:us-east-1:486384427292:Mule4TestQueue" accessKey="AKIAXCPWFMEOB32PJAS3" secretKey="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" />
 	</sqs:config>
-	<global-property doc:name="Global Property" doc:id="d61f579d-8541-46be-93c1-c0951488e96a" name="environment" value="sandbox" />
+	<global-property doc:name="Global Property" doc:id="d61f579d-8541-46be-93c1-c0951488e96a" name="enviroment" value="dev" />
+	<configuration-properties doc:name="Configuration properties" doc:id="c164457e-402a-444a-84df-dc69c3325632" file="config.yaml" />
 	<flow name="aws_s3_buckectFlow" doc:id="3d951f70-590b-4c05-9609-547c9f7d44b9" >
 		<http:listener doc:name="Listener" doc:id="9b91a34f-b2cb-4e27-85ae-8e5e484c1a58" config-ref="HTTP_Listener_config" path="/s3Test"/>
 		<file:read doc:name="Read" doc:id="339428b0-e23b-45fd-b16b-384bff57563a" path="C:\Users\mpradesh\poc\sample csv file\business-employment-data.csv"/>
@@ -38,7 +39,17 @@ payload]]></ee:set-payload>
 	</flow>
 	<flow name="sqs_message" doc:id="5e5e43fe-25cf-4383-b61c-dbad2ce54379" >
 		<http:listener doc:name="Listener" doc:id="6fc28ef3-43c3-4992-8e03-491d9639bd65" config-ref="HTTP_Listener_config" path="/sqsTest"/>
-		<logger level="INFO" doc:name="Processing Started For SQS Message Flow" doc:id="724ee9a0-cfef-4636-868a-3bfa7f041647" message="**** Processing Started For SQS Message Flow *****"/>
+		<logger level="INFO" doc:name="Processing Started For SQS Message Flow" doc:id="724ee9a0-cfef-4636-868a-3bfa7f041647" message="**** Processing Started For SQS Message Flow ***** "/>
+		<ee:transform doc:name="Transform Message" doc:id="6f8e9244-535e-40d6-89bb-ae27eeb83b7f" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="testusrpass" ><![CDATA[%dw 2.0
+output application/json
+---
+p('anypoint.username') ++ p('anypoint.password')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
 		<sqs:read doc:name="Read" doc:id="a161235c-3556-4633-b1e1-6009ea5ce5b8" config-ref="Amazon_SQS_Configuration" maxNumberOfMessages="2" queueUrl="https://sqs.us-east-1.amazonaws.com/486384427292/Mule4TestQueue"/>
 		<logger level="INFO" doc:name="Read Payload from SQS Queue" doc:id="2bb1f0c4-48e1-48b7-9757-350f86746b73" message="**** Read Payload from SQS Queue **** "/>
 		<set-payload value="#[payload[0].body]" doc:name="Set Payload" doc:id="e11b7569-90cf-4567-8372-31dbc24b7a4a" mimeType="application/json"/>
