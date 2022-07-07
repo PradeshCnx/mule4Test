@@ -35,5 +35,5 @@ pipeline{
 void deployToARM() 
 {
 bat "echo Inside DeployToARM"
-     mvn clean deploy -DmuleDeploy -DskipTests -Danypoint.username=PradeshTrix -Danypoint.password=Mulesoft-123 -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1    
+     mule : mvn clean deploy -DmuleDeploy -DskipTests -Danypoint.username=PradeshTrix -Danypoint.password=Mulesoft-123 -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1    
 }
