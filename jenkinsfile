@@ -1,6 +1,6 @@
 pipeline{
     
-    agent { label "docker-maven-slave" }
+    agent any
     
     environment {
             JAVA_VERSION = "1.8.0" 
