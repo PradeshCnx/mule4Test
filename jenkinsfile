@@ -4,9 +4,9 @@ pipeline{
     
     environment {
             JAVA_VERSION = "1.8.0" 
-            ANYPOINT_CREDS = credentials('anypoint-runtime')
-            ANYPOINT_MR_BG = credentials('anypoint-businessgroup')
-            GITHUB_CREDS = credentials('mule-github')
+            //ANYPOINT_CREDS = credentials('anypoint-runtime')
+            //ANYPOINT_MR_BG = credentials('anypoint-businessgroup')
+            //GITHUB_CREDS = credentials('mule-github')
         }
     stages
     {
@@ -37,10 +37,10 @@ void deployToARM()
     // Deploy it to Mulesoft Runtime
     glMavenBuild mavenGoals: """ -U --batch-mode \
                             -Dmule.verbose.exceptions=true\
-                            -Danypoint.username='${env.ANYPOINT_CREDS_USR}' \
-                            -Danypoint.password='${env.ANYPOINT_CREDS_PSW}' \
+                            -Danypoint.username='PradeshTrix' \
+                            -Danypoint.password='P@$$word@123' \
                             -Denvironment='Sandbox' \
-                            -DbusinessGroupId='${env.ANYPOINT_MR_BG}' \
+                            -DbusinessGroupId='concentrix' \
                             -DmuleDeploy -DskipTests clean deploy """ 
                 
 }
