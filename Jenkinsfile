@@ -2,7 +2,7 @@
 pipeline{
   agent any
   tools {
-       maven 'maven_3_5_0'
+       maven 'maven_3_8_4'
    }
  environment {
    testvar = ''
