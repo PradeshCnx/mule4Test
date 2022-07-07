@@ -36,12 +36,6 @@ void deployToARM()
 {
 bat "echo Inside DeployToARM"
     // Deploy it to Mulesoft Runtime
-    glMavenBuild mavenGoals: """ -U --batch-mode \
-                            -Dmule.verbose.exceptions=true\
-                            -Danypoint.username='PradeshTrix' \
-                            -Danypoint.password='Mulesoft-123' \
-                            -Denvironment='Sandbox' \
-                            -DbusinessGroupId='concentrix' \
-                            -DmuleDeploy -DskipTests clean deploy """ 
+   mvn clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=PradeshTrix -Danypoint.password= Mulesoft-123 -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo
                 
 }
