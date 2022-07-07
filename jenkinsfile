@@ -4,19 +4,19 @@ pipeline{
 	stages{
 		stage('Build'){
 			steps{
-				git 'https://github.com/PradeshCnx/mule4Test.git'
+				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
 				bat "mvn -Dmaven.test.failure.ignore-true clean package"
 			}
 		}
 		stage('Test'){
 			steps{
-				git 'https://github.com/PradeshCnx/mule4Test.git'
+				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
 				bat "mvn -Dmaven.test.failure.ignore-true clean test"
 			}
 		}
 		stage('Deploy'){
 			steps{
-				git 'https://github.com/PradeshCnx/mule4Test.git'
+				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
 				bat "mvn -Dmaven.test.failure.ignore-true clean Deploy -DmuleDeploye"
 			}
 		}
