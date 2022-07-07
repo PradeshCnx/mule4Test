@@ -1,0 +1,13 @@
+anypoint:
+  username: "PradeshTrx"
+  password: "Mulesoft-123"
+  env: "Sandbox"
+  appname: "awsS3Buckect"
+  business: "concentrix"
+  vCore: "Micro"
+  workers: "1"
+  altDeploymentRepository: "myinternalrepo::default::file:///C:/muleRepo"
+  
+mule:
+  version: "4.4.0"
+  app: ""
