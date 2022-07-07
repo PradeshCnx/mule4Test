@@ -12,10 +12,10 @@ http://www.mulesoft.org/schema/mule/sqs http://www.mulesoft.org/schema/mule/sqs/
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="e6b08e24-6de4-4b73-aa68-1f18ae483851" >
-		<s3:basic-connection accessKey="AKIAXCPWFMEOB32PJAS3" secretKey="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" />
+		<s3:basic-connection accessKey="need to give proper access key while running" secretKey="need to give proper access key while running" />
 	</s3:config>
 	<sqs:config name="Amazon_SQS_Configuration" doc:name="Amazon SQS Configuration" doc:id="9701609e-904c-4c7f-bace-7be6cc73e80e" >
-		<sqs:basic-connection testQueueArn="arn:aws:sqs:us-east-1:486384427292:Mule4TestQueue" accessKey="AKIAXCPWFMEOB32PJAS3" secretKey="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" />
+		<sqs:basic-connection testQueueArn="arn:aws:sqs:us-east-1:486384427292:Mule4TestQueue" accessKey="need to give proper access key while running" secretKey="need to give proper access key while running" />
 	</sqs:config>
 	<global-property doc:name="Global Property" doc:id="d61f579d-8541-46be-93c1-c0951488e96a" name="environment" value="sandbox" />
 	<flow name="aws_s3_buckectFlow" doc:id="3d951f70-590b-4c05-9609-547c9f7d44b9" >
