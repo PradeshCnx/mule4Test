@@ -34,6 +34,7 @@ pipeline{
  
 void deployToARM() 
 {
+bat "echo Inside DeployToARM"
     // Deploy it to Mulesoft Runtime
     glMavenBuild mavenGoals: """ -U --batch-mode \
                             -Dmule.verbose.exceptions=true\
