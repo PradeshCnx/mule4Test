@@ -1,18 +1,46 @@
-pipeline
+pipeline{
+    
+    agent { label "docker-maven-slave" }
+    
+    environment {
+            JAVA_VERSION = "1.8.0" 
+            ANYPOINT_CREDS = credentials('anypoint-runtime')
+            ANYPOINT_MR_BG = credentials('anypoint-businessgroup')
+            GITHUB_CREDS = credentials('mule-github')
+        }
+    stages
+    {
+          stage("Git GetInfo")
+           {
+                // Stage to gather git variables to be used during further stages
+                steps 
+                {
+                    bat "echo Git GetInfo"
+                   // glGitGetInfo()
+                }
+            }
+          stage("deploy to Dev")
+           {
+                steps 
+                {
+                    bat "echo Building and Unit Testing"
+                  //  glMavenBuild mavenGoals:"clean verify"
+                    deployToARM()
+                }
+
+           }
+   }
+}
+ 
+void deployToARM() 
 {
-	agent any
-	stages{
-		stage('Build Application '){
-		 staps{
-			bat 'mvn clean install'
-		}
-		}
-		
-	stage('Deploy Application to Mulesoft cloudhub'){
-		staps{
-			bat 'mvn package deploy -DmuleDeploy'
-		}
-	  }
-	
-	}
+    // Deploy it to Mulesoft Runtime
+    glMavenBuild mavenGoals: """ -U --batch-mode \
+                            -Dmule.verbose.exceptions=true\
+                            -Danypoint.username='${env.ANYPOINT_CREDS_USR}' \
+                            -Danypoint.password='${env.ANYPOINT_CREDS_PSW}' \
+                            -Denvironment='Sandbox' \
+                            -DbusinessGroupId='${env.ANYPOINT_MR_BG}' \
+                            -DmuleDeploy -DskipTests clean deploy """ 
+                
 }
