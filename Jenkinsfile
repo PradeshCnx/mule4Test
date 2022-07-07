@@ -13,7 +13,7 @@ pipeline{
  		steps {
           script{
  				 configFileProvider([configFile(fileId: 'settings-mule-snapshot',variable: 'MAVEN_SETTINGS_XML')]) {
-                        sh """mvn -s $MAVEN_SETTINGS_XML clean install"""
+                        bat """mvn -s $MAVEN_SETTINGS_XML clean install"""
                 }
           }	
  		}
@@ -22,7 +22,7 @@ pipeline{
  		steps {
           script{
  				 configFileProvider([configFile(fileId: 'settings-mule-snapshot',variable: 'MAVEN_SETTINGS_XML')]) {
- 				sh """mvn -s $MAVEN_SETTINGS_XML -Dmaven.repo.local="~/.m2/repository" package mule:deploy"""
+ 				bat """mvn -s $MAVEN_SETTINGS_XML -Dmaven.repo.local="~/.m2/repository" package mule:deploy"""
                 archiveArtifacts(artifacts: '**/target/*.jar', onlyIfSuccessful: true, fingerprint: true)
  			
  		}
