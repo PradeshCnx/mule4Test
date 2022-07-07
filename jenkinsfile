@@ -1,39 +1,25 @@
 pipeline{
-    
-    agent any
-    
-    environment {
-            JAVA_VERSION = "1.8.0" 
-            //ANYPOINT_CREDS = credentials('anypoint-runtime')
-            //ANYPOINT_MR_BG = credentials('anypoint-businessgroup')
-            //GITHUB_CREDS = credentials('mule-github')
-        }
-    stages
-    {
-          stage("Git GetInfo")
-           {
-                // Stage to gather git variables to be used during further stages
-                steps 
-                {
-                    bat "echo Git GetInfo"
-                   // glGitGetInfo()
-                }
-            }
-          stage("deploy to Dev")
-           {
-                steps 
-                {
-                    bat "echo Building and Unit Testing"
-                  //  glMavenBuild mavenGoals:"clean verify"
-                    deployToARM()
-                }
+	agent any
+	
+	stages{
+		stage('Build'){
+			steps{
+				git 'https://github.com/PradeshCnx/mule4Test.git'
+				bat "mvn -Dmaven.test.failure.ignore-true clean package"
+			}
+		}
+		stage('Test'){
+			steps{
+				git 'https://github.com/PradeshCnx/mule4Test.git'
+				bat "mvn -Dmaven.test.failure.ignore-true clean test"
+			}
+		}
+		stage('Deploy'){
+			steps{
+				git 'https://github.com/PradeshCnx/mule4Test.git'
+				bat "mvn -Dmaven.test.failure.ignore-true clean Deploy -DmuleDeploye"
+			}
+		}
+	}
 
-           }
-   }
-}
- 
-void deployToARM() 
-{
-bat "echo Inside DeployToARM"
-     mulesoft mule : mvn clean deploy -DmuleDeploy -DskipTests -Danypoint.username=PradeshTrix -Danypoint.password=Mulesoft-123 -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1    
 }
