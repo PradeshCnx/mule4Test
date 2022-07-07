@@ -5,27 +5,24 @@ pipeline{
        maven 'M2_HOME'
    }
  environment {
-   testvar = ''
+   testvar = 'Sanbox'
  }
  stages {
    
  stage ('Build'){
  		steps {
           script{
- 				 configFileProvider([configFile(fileId: 'settings-mule-snapshot',variable: 'MAVEN_SETTINGS_XML')]) {
-                        bat """mvn -s $MAVEN_SETTINGS_XML clean install"""
-                }
+ 				 
+                 bat "mvn clean install"
+                
           }	
  		}
  	}
 	stage ('Deploy'){
  		steps {
           script{
- 				 configFileProvider([configFile(fileId: 'settings-mule-snapshot',variable: 'MAVEN_SETTINGS_XML')]) {
- 				bat """mvn -s $MAVEN_SETTINGS_XML -Dmaven.repo.local="~/.m2/repository" package mule:deploy"""
-                archiveArtifacts(artifacts: '**/target/*.jar', onlyIfSuccessful: true, fingerprint: true)
- 			
- 		}
+ 				 
+ 				bat "deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=PradeshTrix -Danypoint.password=P@$$word@123 -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
           }
         }
  }
