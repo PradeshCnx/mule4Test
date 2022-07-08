@@ -17,5 +17,19 @@ pipeline{
 			}
 		}
 	}
+	stages{
+		stage('Deploy to dev'){
+			environment{
+                	anypoint_userName = credentials('User_Name')
+			anypoint_passwrd = credentials('anypoint_password')
+            		}
+			 input{
+    				message "Do you want to proceed for Dev deployment?"
+ 			      }
+			steps{
+				bat 'echo "Deploy into Dev Environment"'
+			}
+		}
+	}
 
 }
