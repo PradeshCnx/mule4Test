@@ -16,9 +16,7 @@ pipeline{
 				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=$anypoint_passwrd -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
 			}
 		}
-	}
-	stages{
-		stage('Deploy to dev'){
+		stage('Deploy to Dev'){
 			environment{
                 	anypoint_userName = credentials('User_Name')
 			anypoint_passwrd = credentials('anypoint_password')
@@ -31,5 +29,4 @@ pipeline{
 			}
 		}
 	}
-
 }
