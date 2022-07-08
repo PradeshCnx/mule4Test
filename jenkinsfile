@@ -8,10 +8,10 @@ pipeline{
 			anypoint_passwrd = credentials('anypoint_password')
             		}
 			 input{
-    				message "Do you want to proceed for production deployment?"
+    				message "Do you want to proceed for Sandbox deployment?"
  			      }
 			steps{
-				bat 'echo "Deploy into Prod"'
+				bat 'echo "Deploy into Sandbox"'
 				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
 				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=$anypoint_passwrd -Denv=Sandbox -Dappname=awsS3Buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
 			}
