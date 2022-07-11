@@ -2,20 +2,31 @@ pipeline{
 	agent any
 	
 	stages{
-		stage('Deploy to Sandbox'){
+		stage('Deploy to Dev'){
 			environment{
                 	anypoint_userName = credentials('anypoint_usrName')
 			anypoint_passwrd = credentials('anypoint_password')
             		}
-			 input{
-    				message "Do you want to proceed for Sandbox deployment?"
- 			      }
 			steps{
 				bat 'echo "Deploy into Sandbox"'
 				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
-				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=$anypoint_passwrd -Denv=Sandbox -Dappname=s3bucket -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
+				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=$anypoint_passwrd -Denv=Sandbox -Dappname=s3buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
+
+			}
+		}
+		stage('Deploy to Release'){
+			environment{
+                	anypoint_userName = credentials('anypoint_usrName')
+					anypoint_passwrd = credentials('anypoint_password')
+            		}
+			 input{
+    				message "Do you want to proceed for Release deployment?"
+ 			      }
+			steps{
+				bat 'echo "Deploy into Release Environment"'
+				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
+				bat "mvn -Dmaven.test.failure.ignore-true clean deploy -DmuleDeploy -DskipTests -Dmule.version=4.4.0 -Danypoint.username=$anypoint_userName -Danypoint.password=$anypoint_passwrd -Denv=Sandbox -Dappname=s3buckect -Dbusiness=concentrix -DvCore=Micro -Dworkers=1 -DaltDeploymentRepository=myinternalrepo::default::file:///C:/muleRepo"
 			}
 		}
 	}
-
 }
