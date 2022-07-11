@@ -1,6 +1,6 @@
 anypoint:
-  username: "PradeshTrx"
-  password: "Mulesoft-123"
+  username: "raghusantosh1807"
+  password: "P@$$word@123"
   env: "Sandbox"
   appname: "awsS3Buckect"
   business: "concentrix"
