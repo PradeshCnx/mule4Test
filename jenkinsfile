@@ -3,13 +3,6 @@ pipeline{
 	
 	stages{
 		stage('Deploy to Sandbox'){
-			environment{
-                	anypoint_userName = credentials('User_Name')
-			anypoint_passwrd = credentials('anypoint_password')
-            		}
-			 input{
-    				message "Do you want to proceed for Sandbox deployment?"
- 			      }
 			steps{
 				bat 'echo "Deploy into Sandbox"'
 				git branch: 'devlop', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
@@ -17,13 +10,6 @@ pipeline{
 			}
 		}
 		stage('Deploy to Dev'){
-			environment{
-                	anypoint_userName = credentials('User_Name')
-			anypoint_passwrd = credentials('anypoint_password')
-            		}
-			 input{
-    				message "Do you want to proceed for Dev deployment?"
- 			      }
 			steps{
 				bat 'echo "Deploy into Dev Environment"'
 			}
