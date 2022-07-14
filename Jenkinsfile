@@ -9,7 +9,21 @@ pipeline{
 		}
 		stage('Upload War to Nexus'){
 			steps{
-				nexusArtifactUploader artifacts: [[artifactId: 'aws_s3_buckect', classifier: '', type: 'war']], credentialsId: 'nexus', groupId: 'com.mycompany', nexusUrl: 'localhost:8081/nexus', nexusVersion: 'nexus3', protocol: 'http', repository: 'sampleApp-release', version: '1.0.0'
+				nexusArtifactUploader artifacts: [
+				[
+				artifactId: 'aws_s3_buckect',
+				classifier: '',
+				file: 'target/aws_s3_buckect',
+				type: 'war'
+				]
+				], 
+				credentialsId: 'nexus',
+				groupId: 'com.mycompany',
+				nexusUrl: 'localhost:8081/nexus',
+				nexusVersion: 'nexus3',
+				protocol: 'http',
+				repository: 'sampleApp-release',
+				version: '1.0.0'
 			}
 		}
 	}
