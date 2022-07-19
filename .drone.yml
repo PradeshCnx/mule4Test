@@ -30,10 +30,8 @@ services:
 	- name: liquibase-validate-curr
 	  image: postgres:11-alpine
 	  environment:
-		POSTGRES_DB: postgres
-		POSTGRES_USER: admin
-		POSTGRES_PASSWORD: password
-		PGPORT: '9996'
+		MULE_USER: raghusantosh1807
+		MULE_PASSWORD: July1807-84
 	  volumes:
 		- name: liquibase-validate-curr-data
 		  path: /var/lib/postgresql/data
@@ -42,14 +40,13 @@ steps:
 	- name: release-dry-run
 	  image: 468112960843.dkr.ecr.us-east-2.amazonaws.com/infrastructure/npd-us-east-2-dev-build-tools:1.14.0
 	  environment:
-		LIQUIBASE_BASE_TAG: "4.0.0"
+		LIQUIBASE_BASE_TAG: "4.4.0"
 		SERVICE_BASE_TAG: "3.1-buster0slim"
 		DOCKER_REGISTRY: 468112960843.dkr.ecr.us-east-2.amazonaws.com/npd-us-east-2-dev-compliance-services
 		COVERAGE_THRESHOLD: "100"
 		DOTNET_USE_POLLING_FILE_WATCHER: "true"
 		APP_NAME: mule-test
 		CHART_PATH: charts/mule-test
-		POSTGRES_DRIVER_VERSION: '42.2.12'
 		LIQUIBASE_DIR: /temp/${DRONE_REPO_NAME}
 		CHANGELOG_BASE_DIR: liquibase
 		PREV_CHANGELOG_BASE_DIR: /temp/${DRONE_REPO_NAME}/liquibase
@@ -64,7 +61,7 @@ steps:
 		event:
 			- pull_request
 	  command:
-		-	build-scripts/download-liquibase.sh $POSTGRES_DRIVER_VERSION $LIQUIBASE_DIR
+		-	build-scripts/download-liquibase.sh $LIQUIBASE_DIR
 		-	yarn install
 		-	yarn commitlint
 		-	yarn release-dry-run
