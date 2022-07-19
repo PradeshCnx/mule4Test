@@ -17,39 +17,20 @@ trigger:
 	  - push
 	  - pull_request
 	  
-volumes:
-	- name: dockersock
-	  temp: {}
-	- name: liquibase-validate-curr-data
-	  temp: {}
-	- name: liquibase-validate-prev-data
-	  temp: {}
-	- name: liquibase-temp
-	  temp: {}
 services:
 	- name: liquibase-validate-curr
-	  image: postgres:11-alpine
 	  environment:
 		MULE_USER: raghusantosh1807
 		MULE_PASSWORD: July1807-84
-	  volumes:
-		- name: liquibase-validate-curr-data
-		  path: /var/lib/postgresql/data
 		  
 steps:
 	- name: release-dry-run
-	  image: 468112960843.dkr.ecr.us-east-2.amazonaws.com/infrastructure/npd-us-east-2-dev-build-tools:1.14.0
 	  environment:
 		LIQUIBASE_BASE_TAG: "4.4.0"
 		SERVICE_BASE_TAG: "3.1-buster0slim"
-		DOCKER_REGISTRY: 468112960843.dkr.ecr.us-east-2.amazonaws.com/npd-us-east-2-dev-compliance-services
 		COVERAGE_THRESHOLD: "100"
 		DOTNET_USE_POLLING_FILE_WATCHER: "true"
 		APP_NAME: mule-test
-		CHART_PATH: charts/mule-test
-		LIQUIBASE_DIR: /temp/${DRONE_REPO_NAME}
-		CHANGELOG_BASE_DIR: liquibase
-		PREV_CHANGELOG_BASE_DIR: /temp/${DRONE_REPO_NAME}/liquibase
 		GH_TOKEN:
 			from_secret: github-token
 	  volumes:
@@ -65,22 +46,3 @@ steps:
 		-	yarn install
 		-	yarn commitlint
 		-	yarn release-dry-run
-
-
----
-kind: secret
-name: github-token
-get:
-   path: drone-pipeline-secret
-   name: github-token
-   
----
-kind: secret
-name: argocd-token
-get:
-  path: drone-pipeline-secret
-  name: argocd-token
-  
----
-kind: signature
-hmac: b362asdif377758bjbjcbdv9wu9ue9yur
