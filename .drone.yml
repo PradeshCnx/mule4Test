@@ -1,48 +1,55 @@
----
 kind: pipeline
-type: kubernetes
-name: mule-test
-service_account_name: drone-pipeline
+type: docker
+name: default
 
-metadata:
-	namespace: drone
-node_selector:
-	kubernetes.io/os: linux
-	kubernetes.io/arch: amd64
-	
 trigger:
-	branch:
-	  - devlop
-	event:
-	  - push
-	  - pull_request
-	  
-services:
-	- name: liquibase-validate-curr
-	  environment:
-		MULE_USER: raghusantosh1807
-		MULE_PASSWORD: July1807-84
-		  
+  branch:
+  - devlop
+
 steps:
-	- name: release-dry-run
-	  environment:
-		LIQUIBASE_BASE_TAG: "4.4.0"
-		SERVICE_BASE_TAG: "3.1-buster0slim"
-		COVERAGE_THRESHOLD: "100"
-		DOTNET_USE_POLLING_FILE_WATCHER: "true"
-		APP_NAME: mule-test
-		GH_TOKEN:
-			from_secret: github-token
-	  volumes:
-		- name: dockersock
-		  path: /var/run
-		- name: liquibase-temp
-		  path: /temp/liquibase
-	  when:
-		event:
-			- pull_request
-	  command:
-		-	build-scripts/download-liquibase.sh $LIQUIBASE_DIR
-		-	yarn install
-		-	yarn commitlint
-		-	yarn release-dry-run
+- name: lint
+  image: quay.io/helmpack/chart-testing:v3.5.0
+  commands:
+  - apk add --update make
+  - ct lint
+# cloud.drone.io runners are using a version of docker prior to 20.10.0, so
+# this step currently fails due to this change in apline 3.14
+# https://wiki.alpinelinux.org/wiki/Release_Notes_for_Alpine_3.14.0#faccessat2
+#  - make lint
+
+- name: generate
+  image: alpine/helm:3.0.3
+  commands:
+  - apk add --update make
+  - make publish
+
+- name: push
+  image: appleboy/drone-git-push
+  pull: if-not-exists
+  settings:
+    branch: devlop
+    remote: git@github.com:drone/mule4Test.git
+    commit: true
+    commit_message: update charts [CI SKIP]
+    ssh_key:
+      from_secret: ssh_deploy_key
+  when:
+    event:
+    - push
+    branch:
+    - master
+
+- name: publish
+  image: lucap/drone-netlify
+  pull: if-not-exists
+  settings:
+    path: ./docs
+    site_id:
+      from_secret: netlify_site_id
+    token:
+      from_secret: netlify_token
+  when:
+    event:
+    - push
+    branch:
+    - devlop
