@@ -1,55 +1,9 @@
 kind: pipeline
 type: docker
 name: default
-
-trigger:
-  branch:
-  - devlop
-
 steps:
-- name: lint
-  image: quay.io/helmpack/chart-testing:v3.5.0
-  commands:
-  - apk add --update make
-  - ct lint
-# cloud.drone.io runners are using a version of docker prior to 20.10.0, so
-# this step currently fails due to this change in apline 3.14
-# https://wiki.alpinelinux.org/wiki/Release_Notes_for_Alpine_3.14.0#faccessat2
-#  - make lint
-
-- name: generate
-  image: alpine/helm:3.0.3
-  commands:
-  - apk add --update make
-  - make publish
-
-- name: push
-  image: appleboy/drone-git-push
-  pull: if-not-exists
-  settings:
-    branch: devlop
-    remote: git@github.com:drone/mule4Test.git
-    commit: true
-    commit_message: update charts [CI SKIP]
-    ssh_key:
-      from_secret: ssh_deploy_key
-  when:
-    event:
-    - push
-    branch:
-    - master
-
-- name: publish
-  image: lucap/drone-netlify
-  pull: if-not-exists
-  settings:
-    path: ./docs
-    site_id:
-      from_secret: netlify_site_id
-    token:
-      from_secret: netlify_token
-  when:
-    event:
-    - push
-    branch:
-    - devlop
+  - name: dronetest
+    image: node
+    commands:
+      npm install
+      npm test
