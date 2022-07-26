@@ -10,7 +10,7 @@ pipeline{
 		stage('Test'){
 			steps{
 				git branch: 'main', credentialsId: 'cabbdcc2-ae95-42d9-a016-50786bff5726', url: 'https://github.com/PradeshCnx/mule4Test.git'
-				bat "mvn -Dmaven.test.failure.ignore-true clean test"
+				bat "mvn -Dmaven.test.failure.ignore-true clean test -DskipTests=false"
 			}
 		}
 		stage('Deploy'){
